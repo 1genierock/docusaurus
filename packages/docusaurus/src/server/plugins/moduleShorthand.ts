@@ -43,10 +43,14 @@ export function resolveModuleName(
     } catch {
       return false;
     }
-  });
+    });
   if (!module) {
-    throw new Error(`Docusaurus was unable to resolve the "${moduleName}" ${moduleType}. Make sure one of the following packages are installed:
-${modulePatterns.map((m) => `- ${m}`).join('\n')}`);
+    if (moduleName === 'classic' && moduleType === 'preset') {
+      try {
+        return moduleRequire.resolve('@docusaurus/preset-classic');
+      } catch {}
+    }
+    throw new Error(`Docusaurus was unable to resolve...\n${modulePatterns.map((m) => ` - ${m}`).join('\n')}`);
   }
   return module;
 }
